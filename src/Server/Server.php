@@ -7,8 +7,10 @@ namespace Imi\Fpm\Server;
 use Imi\App;
 use Imi\Bean\Annotation\Bean;
 use Imi\Event\EventParam;
+use Imi\Fpm\FpmAppContexts;
 use Imi\Fpm\Http\Message\FpmRequest;
 use Imi\Fpm\Http\Message\FpmResponse;
+use Imi\Log\Log;
 use Imi\RequestContext;
 use Imi\Server\Contract\BaseServer;
 use Imi\Server\Http\Listener\HttpRouteInit;
@@ -81,7 +83,7 @@ class Server extends BaseServer
             // 初始化路由
             /** @var HttpRoute $route */
             $route = $this->getBean('HttpRoute');
-            if ($route->isEmpty())
+            if ($route->isEmpty() && !App::get(FpmAppContexts::ROUTE_INITED))
             {
                 (new HttpRouteInit())->handle(new EventParam(''));
             }
@@ -95,8 +97,7 @@ class Server extends BaseServer
             // @phpstan-ignore-next-line
             if (true !== $this->getBean('HttpErrorHandler')->handle($th))
             {
-                // @phpstan-ignore-next-line
-                App::getBean('ErrorLog')->onException($th);
+                Log::error($th);
             }
         }
     }

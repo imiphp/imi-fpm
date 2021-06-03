@@ -14,7 +14,7 @@ class FpmRequest extends Request
     /**
      * 客户端地址
      */
-    protected IPEndPoint $clientAddress;
+    protected ?IPEndPoint $clientAddress = null;
 
     /**
      * {@inheritDoc}
@@ -45,9 +45,9 @@ class FpmRequest extends Request
         $headers = [];
         foreach ($_SERVER as $name => $value)
         {
-            if ('HTTP_' === substr($name, 0, 5))
+            if (str_starts_with($name, 'HTTP_'))
             {
-                $headers[strtolower(str_replace('_', '-', substr($name, 5)))] = $value;
+                $headers[str_replace('_', '-', substr($name, 5))] = $value;
             }
         }
         $this->mergeHeaders($headers);

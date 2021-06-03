@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Imi\Fpm\Test\Web\Tests;
 
 use Imi\Util\Http\Consts\MediaType;
+use Imi\Util\Uri;
 use Yurun\Util\HttpRequest;
 use Yurun\Util\YurunHttp\Http\Psr7\UploadedFile;
 
@@ -112,8 +113,8 @@ class RequestTest extends BaseTest
                             ])
                             ->get($this->host . 'info');
         $data = $response->json(true);
-        $this->assertEquals($time, $data['headers']['time'] ?? null);
-        $this->assertEquals($hash, $data['headers']['hash'] ?? null);
+        $this->assertEquals($time, $data['headers']['TIME'] ?? null);
+        $this->assertEquals($hash, $data['headers']['HASH'] ?? null);
     }
 
     /**
@@ -210,6 +211,7 @@ class RequestTest extends BaseTest
         $response = $http->get($uri);
         $data = $response->json(true);
         $this->assertEquals($uri, $data['uri'] ?? null);
+        $this->assertEquals(TEST_APP_CALLBACK_URI, $data['appUri'] ?? null);
     }
 
     /**
