@@ -11,8 +11,9 @@ use Imi\Cli\Annotation\CommandAction;
 use Imi\Cli\Annotation\Option;
 use Imi\Cli\ArgType;
 use Imi\Cli\Contract\BaseCommand;
-use function Imi\ttyExec;
 use Imi\Util\File;
+
+use function Imi\ttyExec;
 
 /**
  * @Command("fpm")
@@ -23,6 +24,7 @@ class Server extends BaseCommand
      * 启动 php 内置服务器.
      *
      * @CommandAction(name="start", description="启动 php 内置服务器")
+     *
      * @Option(name="host", type=ArgType::STRING, default="0.0.0.0", comments="主机名")
      * @Option(name="port", type=ArgType::INT, default=8080, comments="端口")
      */
@@ -32,7 +34,7 @@ class Server extends BaseCommand
         {
             /** @var \Symfony\Component\Process\Process|null $process */
             $process = null;
-            pcntl_signal(\SIGTERM, function () use (&$process) {
+            pcntl_signal(\SIGTERM, static function () use (&$process) {
                 if ($process)
                 {
                     $process->signal(\SIGINT);
